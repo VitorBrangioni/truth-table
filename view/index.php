@@ -1,3 +1,11 @@
+<?php 
+
+if (isset($_POST['submit'])) {
+	echo $_POST['fullExpression'];
+}
+
+?>
+
 <html ng-app="tabelaVerdade">
 
 <head>
@@ -44,7 +52,7 @@
 
 			$scope.insertParenthese = function (parenthese) {
 				var verifiedParentheses = $scope.verifyParentheses();
-				if (verifiedParentheses > 0 && parenthese === $scope.parentheseEnum.CLOSED) {
+				if (parenthese === $scope.parentheseEnum.CLOSED && verifiedParentheses > 0 && $scope.lastCharIsLetter($scope.fullExpression)) {
 					$scope.fullExpression += ")";
 				} else if (verifiedParentheses === 0 && parenthese === $scope.parentheseEnum.OPENED) {
 					$scope.fullExpression += "(";
@@ -94,6 +102,22 @@
 				return isChar;
 			}
 
+			$scope.deleteLastChar = function (string) {
+				var stringEdited = string;
+
+				if (string) {
+					stringEdited = string.substring(0, string.length - 1);
+				}
+				return stringEdited;
+			}
+
+			$scope.deleteLastCharConsole = function () {
+				$scope.fullExpression = $scope.deleteLastChar($scope.fullExpression);
+			}
+
+			$scope.deleteAllCharConsole = function () {
+				$scope.fullExpression = "";
+			}
 
 		});
 
@@ -115,6 +139,7 @@
 </head>
 
 <body ng-controller="truthTableController" class="container container-full">
+<form method="POST" action="index.php">
 	<div class="row container container-full">
 
 		<div class="btn-group-vertical">
@@ -131,7 +156,7 @@
 
 
 		</div>
-		<div class="container pull-right">
+		<div class="container pull-right">form-control
 			<div class="row">
 
 				<div class="btn-group-justified">
@@ -150,35 +175,25 @@
 
 					<div class="row">
 
-						<!-- <span class="col-md-1 grid-sentenca">
-							<h2>p</h2>
-						</span>
-						<span class="col-md-1 grid-sentenca">
-							<h2>^</h2>
-						</span>
-						<span class="col-md-1 grid-sentenca">
-							<h2>~</h2>
-						</span>
-						<span class="col-md-1 grid-sentenca">
-							<h2>q </h2>
-						</span> -->
-
-
-					
-
-					
 						<div class="col-md-12">
-							<input class="form-control" type="text" name="tste" value="{{fullExpression}}" disabled>
+							<input class="form-control" type="text" name="fullExpression" value="{{fullExpression}}" readonly>
 							
 						</div> 
 					</div>
 				</div>
 				{{expression}}
 			</div>
-			<input ng-click="ultimoCaracter()" type="submit" name="submit" value="gerar tabela verdade"
+			<button ng-click="deleteLastCharConsole()" type="button" class="btn btn-danger">
+				Delete
+			</button>
+			<button ng-click="deleteAllCharConsole()" type="button" class="btn btn-danger">
+				Delete all
+			</button>
+			<input type="submit" name="submit" value="gerar tabela verdade"
 				class="btn btn-primary">
 		</div>
 	</div>
+</form>
 </body>
 
 </html>
