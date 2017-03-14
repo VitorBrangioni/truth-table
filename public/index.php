@@ -10,10 +10,11 @@ $proposition = new Proposition("(a^b)", TypePropositionEnum::COMPOUND(), false);
 //$proposition->separatePropositions("(a^c)^b");
 
 
-$frui = TypePropositionEnum::COMPOUND();
+$test = new TypePropositionEnum(TypePropositionEnum::COMPOUND);
 
-if ($frui->is(TypePropositionEnum::COMPOUND)) {
-	echo "Eating an apple.\n";
-} else if ($frui->is(TypePropositionEnum::SIMPLE)) {
-	echo "Eating an orange.\n";
+if ($test->equals(new TypePropositionEnum(TypePropositionEnum::COMPOUND))) {
+	echo 'is equals';
+} else {
+	echo 'not equals';
 }
+

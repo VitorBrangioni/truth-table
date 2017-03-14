@@ -2,11 +2,10 @@
 
 namespace Enum;
 
-use Garoevans\PhpEnum\Enum;
+use MyCLabs\Enum\Enum;
 
 class TypePropositionEnum extends Enum
 {
-	const __default = self::SIMPLE;
-	const SIMPLE = 1;
-	const COMPOUND = 2;
+	const SIMPLE = "simple";
+	const COMPOUND = "compound";
 }

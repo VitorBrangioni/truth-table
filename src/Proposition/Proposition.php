@@ -17,7 +17,7 @@ class Proposition
 		$this->propositionValue = $propositionValue;
 		$this->type = $type;
 		$this->isDenied = $isDenied;
-		if ($type->is(TypePropositionEnum::COMPOUND)) {
+		/* if ($type->is(TypePropositionEnum::COMPOUND)) {
 			$array = $this->separatePropositions($propositionValue);
 			echo 'haha';
 			foreach($array as $value) {
@@ -25,7 +25,7 @@ class Proposition
 			}
 		} else {
 			echo 'tnb;';
-		}
+		} */
 	}
 	
 	private function countParenthese($char) {
