@@ -12,20 +12,19 @@ class Proposition
 	private $isDenied;
 	private $connective;
 	
-	public function __construct(String $propositionValue, $type, bool $isDenied)
+	public function __construct(String $propositionValue, TypePropositionEnum $type, bool $isDenied)
 	{
 		$this->propositionValue = $propositionValue;
 		$this->type = $type;
 		$this->isDenied = $isDenied;
-		/* if ($type->is(TypePropositionEnum::COMPOUND)) {
+		if ($type->equals(new TypePropositionEnum(TypePropositionEnum::COMPOUND))) {
 			$array = $this->separatePropositions($propositionValue);
-			echo 'haha';
-			foreach($array as $value) {
+		 foreach($array as $value) {
 				echo $value ."<br>";
-			}
+			} 
 		} else {
 			echo 'tnb;';
-		} */
+		}
 	}
 	
 	private function countParenthese($char) {
@@ -40,11 +39,11 @@ class Proposition
 
 		
 		foreach ($connectives as $connective) {
-			/*echo "{";
+			/* echo "{";
 			echo $connective. ", ";
 			echo $char;
 			echo "}";
-			echo "<br>"0;*/
+			echo "<br>"; */
 			if ($char == $connective) {
 				$isConnective = true;
 			}
@@ -83,7 +82,6 @@ class Proposition
 		
 		$connective = null;
 		$parentheses = 0;
-		//
 		for ($i = 0; $i < strlen($propositionValue); $i++) {
 			$char = $propositionValue{$i};
 			//Verificando se parenteses estão fechados
@@ -93,30 +91,36 @@ class Proposition
 				$parentheses--;
 			}
 
-			// capturando o simbola de mais alto nivel
+			// capturando o simbola de mais alto nivel, ou seja um q nao esta dentro de parentese
 			if ($parentheses === 0) {
 				if ($this->isSimbol($char) === true) {
 					$simbol .= $char;
 					$pos = $i;
-				} else if($char == "v" || $char == "^") {
+				} else if($char === "v" || $char === "^") {
 					$simbol = $char;
 					$pos = $i;
+					//echo $simbol;
+					//echo $propositionValue . " ==  ".$pos ."<br>";
+					
 				}
 			}
-			
 		}
-		
+		echo "simbol == ".$simbol. "<br>";
+		// remove parenteses extremos, se houver a necessidade
 		if ($simbol === "") {
 			$newProsposition = $this->removeParentheses($propositionValue);
+			//echo "new == ".$newProsposition;
 			return $this->separatePropositions($newProsposition);
 		}
-			  if ($parentheses === 0) {
-				//$connective = $char;
-				//echo strlen($simbol) +1;
-					$prop1 = substr($propositionValue, 0, $pos);
-					$prop2 = substr($propositionValue, strrpos($propositionValue, $simbol) + strlen($simbol), strlen($propositionValue));
-				
-			}
+		// divido a proposicao composta em duas
+	    if ($parentheses === 0) {
+			//$connective = $char;
+			//echo strlen($simbol) +1;
+			$prop1 = substr($propositionValue, 0, $pos);
+			$prop2 = substr($propositionValue, strrpos($propositionValue, $simbol) + strlen($simbol), strlen($propositionValue));
+			//echo $prop1;
+			//echo $prop2;
+		}
 		
 		return array($prop1, $prop2);
 	}
