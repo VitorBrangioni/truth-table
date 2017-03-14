@@ -1,5 +1,6 @@
 {
 	"require" : {
+		"myclabs/php-enum": "^1.5"
 	},
 	"autoload" : {
 		"psr-4" : {

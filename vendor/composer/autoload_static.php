@@ -11,6 +11,10 @@ class ComposerStaticInit8701024b39007dd80a3895ce5257ff63
         array (
             'Proposition\\' => 12,
         ),
+        'M' => 
+        array (
+            'MyCLabs\\Enum\\' => 13,
+        ),
         'E' => 
         array (
             'Enum\\' => 5,
@@ -21,6 +25,10 @@ class ComposerStaticInit8701024b39007dd80a3895ce5257ff63
         'Proposition\\' => 
         array (
             0 => __DIR__ . '/../..' . '/src/Proposition',
+        ),
+        'MyCLabs\\Enum\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/myclabs/php-enum/src',
         ),
         'Enum\\' => 
         array (

@@ -7,5 +7,6 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'Proposition\\' => array($baseDir . '/src/Proposition'),
+    'MyCLabs\\Enum\\' => array($vendorDir . '/myclabs/php-enum/src'),
     'Enum\\' => array($baseDir . '/src/Enum'),
 );
