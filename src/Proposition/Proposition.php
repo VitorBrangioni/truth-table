@@ -2,6 +2,7 @@
 
 namespace Proposition;
 use Enum\TypePropositionEnum;
+use Enum\ConnectiveEnum;
 require_once '../vendor/autoload.php';
 
 class Proposition
@@ -18,32 +19,70 @@ class Proposition
 		$this->type = $type;
 		$this->isDenied = $isDenied;
 		if ($type->equals(new TypePropositionEnum(TypePropositionEnum::COMPOUND))) {
+			$isDenied = $this->verifyIsDenied($propositionValue);
+			
+			if ($isDenied === true) {
+				$propositionValue = $this->removeSignalOfDenied($propositionValue);
+			}
 			$array = $this->separatePropositions($propositionValue);
-		 foreach($array as $value) {
-				echo $value ."<br>";
-			} 
-		} else {
-			echo 'tnb;';
-		}
+			foreach($array as $value) {
+				$this->propositions[] = new Proposition($value, $this->verifyTypeProposition($value), $isDenied);
+			}
+		} 
 	}
 	
-	private function countParenthese($char) {
+	public function verifyIsDenied(String $proposition) : bool
+	{
+		$isDenied = false;
 		
+		if (strlen($proposition) > 0) {
+			$firtChar = $proposition{0};
+			if ($firtChar == "~") {
+				$isDenied = true;
+			}
+		}
+		return $isDenied;
 	}
+	
+	public function verifyConnective(String $conn) : ConnectiveEnum
+	{
+		$connective = ConnectiveEnum::NOT_CONTAINS();
+		
+		switch ($conn) {
+			case "^":
+				$connective = ConnectiveEnum::AND();
+				break;
+			case "v":
+				$connective = ConnectiveEnum::OR();
+				break;
+			case "->":
+				$connective = ConnectiveEnum::IMPLY();
+				break;
+			case "<->":
+				$connective = ConnectiveEnum::EQUIVALENT();
+				break;
+		}
+		
+		return $connective;
+	}
+	
+	public function verifyTypeProposition($value) : TypePropositionEnum
+	{
+		if (strlen($value) === 1) {
+			return 	TypePropositionEnum::SIMPLE();
+		}
+		return TypePropositionEnum::COMPOUND();
+ 	}
+	
+	
+
 	
 	private function isConnective($char) : bool
 	{
 		$connectives = array("^", "v", "->", "<->");
-		
 		$isConnective = false;
-
 		
 		foreach ($connectives as $connective) {
-			/* echo "{";
-			echo $connective. ", ";
-			echo $char;
-			echo "}";
-			echo "<br>"; */
 			if ($char == $connective) {
 				$isConnective = true;
 			}
@@ -64,22 +103,32 @@ class Proposition
 		return $isSimbol;
 	}
 	
+	private function removeSignalOfDenied(String $proposition)
+	{
+		$newProposition = $proposition;
+		if ($proposition != "" && $proposition{0} == "~") {
+			$newProposition = substr($proposition, 1, strlen($proposition) - 1);
+		}
+		return $newProposition;
+	}
+	
 	private function removeParentheses(String $proposition) : String
 	{
-		$newProposition = null;
+		$newProposition = $proposition;
 		if ($proposition{0} === "(" && $proposition{strlen($proposition) - 1} === ")") {
 			$newProposition = substr($proposition, 1, strlen($proposition) - 2);
 		}
+		
 		return $newProposition;
 	}
 	
 	public function separatePropositions(String $propositionValue) : array
 	{
+		$propositionsReturned = null;
 		$pos = null;
 		$prop1 = null;
 		$prop2 = null;
 		$simbol = "";
-		
 		$connective = null;
 		$parentheses = 0;
 		for ($i = 0; $i < strlen($propositionValue); $i++) {
@@ -90,7 +139,6 @@ class Proposition
 			} else if ($char === ")") {
 				$parentheses--;
 			}
-
 			// capturando o simbola de mais alto nivel, ou seja um q nao esta dentro de parentese
 			if ($parentheses === 0) {
 				if ($this->isSimbol($char) === true) {
@@ -99,30 +147,23 @@ class Proposition
 				} else if($char === "v" || $char === "^") {
 					$simbol = $char;
 					$pos = $i;
-					//echo $simbol;
-					//echo $propositionValue . " ==  ".$pos ."<br>";
 					
 				}
 			}
 		}
-		echo "simbol == ".$simbol. "<br>";
-		// remove parenteses extremos, se houver a necessidade
 		if ($simbol === "") {
 			$newProsposition = $this->removeParentheses($propositionValue);
-			//echo "new == ".$newProsposition;
 			return $this->separatePropositions($newProsposition);
 		}
 		// divido a proposicao composta em duas
 	    if ($parentheses === 0) {
-			//$connective = $char;
-			//echo strlen($simbol) +1;
-			$prop1 = substr($propositionValue, 0, $pos);
+			$prop1 = substr($propositionValue, 0, $pos - strlen($simbol) +1);
 			$prop2 = substr($propositionValue, strrpos($propositionValue, $simbol) + strlen($simbol), strlen($propositionValue));
-			//echo $prop1;
-			//echo $prop2;
+			$propositionsReturned = array($prop1, $prop2);
 		}
+		$this->setConnective($this->verifyConnective($simbol));
 		
-		return array($prop1, $prop2);
+		return $propositionsReturned;
 	}
 	
 	public function findProposition(String $proposition)
@@ -135,11 +176,6 @@ class Proposition
 			}
 		}
 		return $find;
-	}
-	
-	public function toString()
-	{
-		return;
 	}
 	
 	public function getPropositionValue() : String
@@ -188,6 +224,9 @@ class Proposition
 	
 	public function getConnective() : ConnectiveEnum
 	{
+		if ($this->connective === null) {
+			return ConnectiveEnum::NOT_CONTAINS();
+		}
 		return $this->connective;
 	}
 	
@@ -196,9 +235,5 @@ class Proposition
 		$this->connective = $connective;
 		return $this;
 	}
-	
-	
-
-    
 
 }
