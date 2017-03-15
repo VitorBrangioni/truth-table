@@ -1,8 +1,8 @@
 <?php
 
 namespace Proposition;
-use Enum\TypePropositionEnum;
 use Enum\ConnectiveEnum;
+use Enum\TypePropositionEnum;
 require_once '../vendor/autoload.php';
 
 class Proposition
@@ -13,11 +13,33 @@ class Proposition
 	private $isDenied;
 	private $connective;
 	
-	public function __construct(String $propositionValue, TypePropositionEnum $type, bool $isDenied)
+	public function __construct(String $propositionValue, TypePropositionEnum $type)
 	{
 		$this->propositionValue = $propositionValue;
 		$this->type = $type;
+		$this->isDenied = $this->verifyIsDenied($propositionValue);
+		if ($type->equals(TypePropositionEnum::COMPOUND())) {
+			$newProposition = $propositionValue;
+			if ($this->isDenied === true) {
+				$newProposition = $this->removeSignalOfDenied($propositionValue);
+			}
+			if($newProposition != null) {
+				$propositions = $this->separatePropositions($newProposition);
+			}
+			
+			 foreach ($propositions as $prop) {
+			 	echo $value. " | ";
+				$this->propositions[] = new Proposition($prop, $this->verifyTypeProposition($prop));
+			} 
+		
+		}
+		
+		
+		
+		/* $this->propositionValue = $propositionValue;
+		$this->type = $type;
 		$this->isDenied = $isDenied;
+		
 		if ($type->equals(new TypePropositionEnum(TypePropositionEnum::COMPOUND))) {
 			$isDenied = $this->verifyIsDenied($propositionValue);
 			
@@ -26,9 +48,10 @@ class Proposition
 			}
 			$array = $this->separatePropositions($propositionValue);
 			foreach($array as $value) {
-				$this->propositions[] = new Proposition($value, $this->verifyTypeProposition($value), $isDenied);
+				echo "value====".$value."<br>";
+				$this->propositions[] = new Proposition($value, $this->verifyTypeProposition($value), $this->verifyIsDenied($value));
 			}
-		} 
+		}  */
 	}
 	
 	public function verifyIsDenied(String $proposition) : bool
@@ -124,6 +147,24 @@ class Proposition
 	
 	public function separatePropositions(String $propositionValue) : array
 	{
+		/* $propositionsReturned = null;
+		$simpleProposition = 0;
+		$conn = 0;
+		
+		$propositionMod = $this->removeParentheses($propositionValue);
+		
+		for ($i = 0; $i < strlen($propositionMod); $i++) {
+			$char = $propositionValue{$i};
+			
+			if ()
+			
+			
+		} */
+		
+		
+		
+		
+		
 		$propositionsReturned = null;
 		$pos = null;
 		$prop1 = null;
@@ -163,7 +204,7 @@ class Proposition
 		}
 		$this->setConnective($this->verifyConnective($simbol));
 		
-		return $propositionsReturned;
+		return $propositionsReturned;  
 	}
 	
 	public function findProposition(String $proposition)

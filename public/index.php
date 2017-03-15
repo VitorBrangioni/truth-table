@@ -7,8 +7,9 @@ require_once '../vendor/autoload.php';
 // pos = 7
 // size = 3
 
-$proposition = new Proposition("~(a^c)^(bvc)", TypePropositionEnum::COMPOUND(), false);
+$proposition = new Proposition("(c^(c^(b<->c))<->c^d)", TypePropositionEnum::COMPOUND());
 
+/* echo "MAE: ".$proposition->getPropositionValue(). " | TYPE: ".$proposition->getType(). " <br>";
 $i = 0;
 foreach ($proposition->getPropositions() as $proposition) {
 	$isDenied = $proposition->getIsDenied() === true ? "true" : "false";
@@ -28,7 +29,7 @@ foreach ($proposition->getPropositions() as $proposition) {
 	}
 	$i++;
 	echo "<br>";
-}
+} */
 
 //$proposition->separatePropositions("(a^c)^b");
 
