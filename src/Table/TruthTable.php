@@ -2,18 +2,22 @@
 
 namespace Table;
 
-require_once '../../vendor/autoload.php';
+use Proposition\CompleteProposition;
 
-class TruthTable
+class TruthTable extends Table
 {
+	private $motherProposition;
+	private $propositions;
 	
-	public function __construct(int $nSimplePropositions)
+	public function __construct(CompleteProposition $motherProposition)
 	{
-		echo $this->defineNumberLines($nSimplePropositions);
+		$this->setNColumns($motherProposition->countAllPropositions());
+		$this->motherProposition = $motherProposition;
 	}
 	
 	public function defineNumberLines(int $nSimplePropositions) : int
 	{
 		return pow(2, $nSimplePropositions);
 	}
+	
 }

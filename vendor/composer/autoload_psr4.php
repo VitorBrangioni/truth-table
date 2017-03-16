@@ -6,6 +6,7 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
+    'Table\\' => array($baseDir . '/src/Table'),
     'Proposition\\' => array($baseDir . '/src/Proposition'),
     'MyCLabs\\Enum\\' => array($vendorDir . '/myclabs/php-enum/src'),
     'Enum\\' => array($baseDir . '/src/Enum'),
