@@ -13,11 +13,17 @@ class Proposition
 	private $isDenied;
 	private $connective;
 	
+	const AND = "^";
+	const OR = "v";
+	const EQUIVALENT = "=";
+	const IMPLY = ">";
+	const DENIED = "~";
+	
 	public function __construct(String $propositionValue, TypePropositionEnum $type)
 	{
 		$this->propositionValue = $propositionValue;
 		$this->type = $type;
-		$this->isDenied = $this->verifyIsDenied($propositionValue);
+		$this->isDenied = $this->verifyIsDenied($propositionValue, $type);
 		if ($type->equals(TypePropositionEnum::COMPOUND())) {
 			$newProposition = $propositionValue;
 			if ($this->isDenied === true) {
@@ -27,41 +33,33 @@ class Proposition
 				$propositions = $this->separatePropositions($newProposition);
 			}
 			
-			 foreach ($propositions as $prop) {
-			 	echo $prop. " | ";
+			foreach ($propositions as $prop) {
+			 	echo "prop: ".$prop. " | ";
+			 	echo $this->verifyTypeProposition($prop) . "<br>";
 				$this->propositions[] = new Proposition($prop, $this->verifyTypeProposition($prop));
 			} 
 		
 		}
-		
-		
-		
-		/* $this->propositionValue = $propositionValue;
-		$this->type = $type;
-		$this->isDenied = $isDenied;
-		
-		if ($type->equals(new TypePropositionEnum(TypePropositionEnum::COMPOUND))) {
-			$isDenied = $this->verifyIsDenied($propositionValue);
-			
-			if ($isDenied === true) {
-				$propositionValue = $this->removeSignalOfDenied($propositionValue);
-			}
-			$array = $this->separatePropositions($propositionValue);
-			foreach($array as $value) {
-				echo "value====".$value."<br>";
-				$this->propositions[] = new Proposition($value, $this->verifyTypeProposition($value), $this->verifyIsDenied($value));
-			}
-		}  */
 	}
 	
-	public function verifyIsDenied(String $proposition) : bool
+	public function verifyIsDenied(String $proposition, TypePropositionEnum $type) : bool
 	{
 		$isDenied = false;
 		
 		if (strlen($proposition) > 0) {
 			$firtChar = $proposition{0};
-			if ($firtChar == "~") {
-				$isDenied = true;
+			$secondChar = strlen($proposition) > 1 ? $proposition{1} : null;
+			
+
+			
+			if ($type->equals(TypePropositionEnum::SIMPLE())) {
+				if ($firtChar === Proposition::DENIED) {
+					$isDenied = true;
+				}
+			} else if ($type->equals(TypePropositionEnum::COMPOUND())) {
+				if ($firtChar === Proposition::DENIED && $secondChar == "(") {
+					$isDenied = true;
+				}
 			}
 		}
 		return $isDenied;
@@ -72,26 +70,25 @@ class Proposition
 		$connective = ConnectiveEnum::NOT_CONTAINS();
 		
 		switch ($conn) {
-			case "^":
+			case Proposition::AND:
 				$connective = ConnectiveEnum::AND();
 				break;
-			case "v":
+			case Proposition::OR:
 				$connective = ConnectiveEnum::OR();
 				break;
-			case "->":
+			case Proposition::IMPLY:
 				$connective = ConnectiveEnum::IMPLY();
 				break;
-			case "<->":
+			case Proposition::EQUIVALENT:
 				$connective = ConnectiveEnum::EQUIVALENT();
 				break;
 		}
-		
 		return $connective;
 	}
 	
 	public function verifyTypeProposition($value) : TypePropositionEnum
 	{
-		if (strlen($value) === 1) {
+		if (strlen($value) === 1 || strlen($value) === 2 && $value{0} == Proposition::DENIED) {
 			return 	TypePropositionEnum::SIMPLE();
 		}
 		return TypePropositionEnum::COMPOUND();
@@ -102,7 +99,7 @@ class Proposition
 	
 	private function isConnective($char) : bool
 	{
-		$connectives = array("^", "v", "->", "<->");
+		$connectives = array(Proposition::AND, Proposition::OR, Proposition::IMPLY, Proposition::EQUIVALENT);
 		$isConnective = false;
 		
 		foreach ($connectives as $connective) {
@@ -111,19 +108,6 @@ class Proposition
 			}
 		}
 		return $isConnective;
-	}
-	
-	private function isSimbol($char) : bool
-	{
-		$simbols = array("-", "<", ">", "~");
-		$isSimbol = false;
-		
-		foreach ($simbols as $simbol) {
-			if ($char == $simbol) {
-				$isSimbol = true;
-			}
-		}
-		return $isSimbol;
 	}
 	
 	private function removeSignalOfDenied(String $proposition)
@@ -147,24 +131,6 @@ class Proposition
 	
 	public function separatePropositions(String $propositionValue) : array
 	{
-		/* $propositionsReturned = null;
-		$simpleProposition = 0;
-		$conn = 0;
-		
-		$propositionMod = $this->removeParentheses($propositionValue);
-		
-		for ($i = 0; $i < strlen($propositionMod); $i++) {
-			$char = $propositionValue{$i};
-			
-			if ()
-			
-			
-		} */
-		
-		
-		
-		
-		
 		$propositionsReturned = null;
 		$pos = null;
 		$prop1 = null;
@@ -182,13 +148,9 @@ class Proposition
 			}
 			// capturando o simbola de mais alto nivel, ou seja um q nao esta dentro de parentese
 			if ($parentheses === 0) {
-				if ($this->isSimbol($char) === true) {
-					$simbol .= $char;
-					$pos = $i;
-				} else if($char === "v" || $char === "^") {
+				if ($this->isConnective($char) === true) {
 					$simbol = $char;
 					$pos = $i;
-					
 				}
 			}
 		}
@@ -203,7 +165,6 @@ class Proposition
 			$propositionsReturned = array($prop1, $prop2);
 		}
 		$this->setConnective($this->verifyConnective($simbol));
-		
 		return $propositionsReturned;  
 	}
 	
@@ -241,7 +202,7 @@ class Proposition
 		return $this;
 	}
 	
-	public function getPropositions() : array
+	public function getPropositions()
 	{
 		return $this->propositions;
 	}

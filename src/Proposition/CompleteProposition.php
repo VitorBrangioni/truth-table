@@ -5,11 +5,12 @@ namespace Proposition;
 class CompleteProposition
 {
 	private $completeProposition;
-	private $propositions;
+	private $allPropositions;
 	
-	public function __construct(String $completeProposition)
+	public function __construct(Proposition $completeProposition)
 	{
 		$this->completeProposition = $completeProposition;
+		$this->allPropositions = $this->findAllPropositions($completeProposition);
 	}
 	
 	public function seperePropositions() : void
@@ -32,7 +33,8 @@ class CompleteProposition
 		
 	}
 	
-	public function  fndAllPropositions() : array
+	// @TODO
+	public function  findAllPropositions(Proposition $completeProposition) : array
 	{
 		
 	}
