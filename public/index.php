@@ -2,13 +2,24 @@
 
 use Proposition\Proposition;
 use Enum\TypePropositionEnum;
+use Proposition\CompleteProposition;
 
 require_once '../vendor/autoload.php';
 // pos = 7
 // size = 3
 
 $proposition = new Proposition("~(~a^b>p)>c=~p", TypePropositionEnum::COMPOUND());
-$motherDenied = $proposition->getIsDenied() === true ? "true" : "false";
+
+$motherPro = new CompleteProposition($proposition);
+
+$allPropositions = $motherPro->getAllPropositions();
+
+
+foreach ($allPropositions as $a) {
+	echo $a->getPropositionValue(). "<br>";
+}
+
+/*$motherDenied = $proposition->getIsDenied() === true ? "true" : "false";
 echo "MAE: ".$proposition->getPropositionValue(). " | TYPE: ".$proposition->getType(). " | isDenied = ".$motherDenied. "<br>";
 $i = 0;
 foreach ($proposition->getPropositions() as $proposition) {
@@ -43,8 +54,6 @@ foreach ($proposition->getPropositions() as $proposition) {
 							echo " type   = ".$s->getType(). " | ";
 							echo "  conn  =  ".$s->getConnective()->getValue();
 							echo " | isDenied = ".$en;
-								
-								
 						}
 					}
 				}
@@ -54,7 +63,7 @@ foreach ($proposition->getPropositions() as $proposition) {
 	}
 	$i++;
 	echo "<br>";
-} 
+} */
 
 //$proposition->separatePropositions("(a^c)^b");
 

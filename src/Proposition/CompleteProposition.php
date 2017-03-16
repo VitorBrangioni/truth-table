@@ -4,13 +4,13 @@ namespace Proposition;
 
 class CompleteProposition
 {
-	private $completeProposition;
+	private $motherProposition;
 	private $allPropositions;
 	
-	public function __construct(Proposition $completeProposition)
+	public function __construct(Proposition $motherProposition)
 	{
-		$this->completeProposition = $completeProposition;
-		$this->allPropositions = $this->findAllPropositions($completeProposition);
+		$this->completeProposition = $motherProposition;
+		$this->findAllPropositions($motherProposition);
 	}
 	
 	public function seperePropositions() : void
@@ -30,17 +30,42 @@ class CompleteProposition
 	
 	public function findAllCompoundPropositions() : array
 	{
-		
 	}
 	
 	// @TODO
-	public function  findAllPropositions(Proposition $completeProposition) : array
+	public function findAllPropositions(Proposition $completeProposition)
 	{
+		$propositions = $completeProposition->getPropositions();
 		
+		if ($propositions != null) {
+			foreach ($propositions as $prop) {
+				$this->allPropositions[] = $prop;
+				return $this->findAllPropositions($prop);
+			}
+		}
 	}
 	
 	public function toString() : String
 	{
 		
 	}
+
+    public function getMotherProposition(){
+        return $this->motherProposition;
+    }
+
+    public function setMotherProposition($motherProposition){
+        $this->motherProposition = $motherProposition;
+        return $this;
+    }
+
+    public function getAllPropositions(){
+        return $this->allPropositions;
+    }
+
+    public function setAllPropositions($allPropositions){
+        $this->allPropositions = $allPropositions;
+        return $this;
+    }
+
 }
