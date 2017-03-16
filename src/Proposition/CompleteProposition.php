@@ -10,7 +10,7 @@ class CompleteProposition
 	public function __construct(Proposition $motherProposition)
 	{
 		$this->completeProposition = $motherProposition;
-		$this->findAllPropositions($motherProposition);
+		$this->populateAllPropositions($motherProposition);
 	}
 	
 	public function seperePropositions() : void
@@ -33,14 +33,14 @@ class CompleteProposition
 	}
 	
 	// @TODO
-	public function findAllPropositions(Proposition $completeProposition)
+	public function populateAllPropositions(Proposition $completeProposition)
 	{
 		$propositions = $completeProposition->getPropositions();
 		
 		if ($propositions != null) {
 			foreach ($propositions as $prop) {
 				$this->allPropositions[] = $prop;
-				return $this->findAllPropositions($prop);
+				$this->populateAllPropositions($prop);
 			}
 		}
 	}

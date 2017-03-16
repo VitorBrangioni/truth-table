@@ -3,6 +3,7 @@
 use Proposition\Proposition;
 use Enum\TypePropositionEnum;
 use Proposition\CompleteProposition;
+use Table\TruthTable;
 
 require_once '../vendor/autoload.php';
 // pos = 7
@@ -12,12 +13,15 @@ $proposition = new Proposition("~(~a^b>p)>c=~p", TypePropositionEnum::COMPOUND()
 
 $motherPro = new CompleteProposition($proposition);
 
-$allPropositions = $motherPro->getAllPropositions();
+$table = new TruthTable(3);
+
+
+/* $allPropositions = $motherPro->getAllPropositions();
 
 
 foreach ($allPropositions as $a) {
 	echo $a->getPropositionValue(). "<br>";
-}
+} */
 
 /*$motherDenied = $proposition->getIsDenied() === true ? "true" : "false";
 echo "MAE: ".$proposition->getPropositionValue(). " | TYPE: ".$proposition->getType(). " | isDenied = ".$motherDenied. "<br>";

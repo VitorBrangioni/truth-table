@@ -1,11 +1,12 @@
 {
 	"require" : {
-		"myclabs/php-enum": "^1.5"
+		"myclabs/php-enum" : "^1.5"
 	},
 	"autoload" : {
 		"psr-4" : {
 			"Proposition\\" : "src/Proposition",
-			"Enum\\" : "src/Enum"
+			"Enum\\" : "src/Enum",
+			"Table\\" : "src/Table"
 		}
 	}
 }
