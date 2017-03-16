@@ -28,7 +28,7 @@ class Proposition
 			}
 			
 			 foreach ($propositions as $prop) {
-			 	echo $value. " | ";
+			 	echo $prop. " | ";
 				$this->propositions[] = new Proposition($prop, $this->verifyTypeProposition($prop));
 			} 
 		
