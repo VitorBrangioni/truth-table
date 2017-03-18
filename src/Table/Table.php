@@ -6,7 +6,7 @@ abstract class Table
 {
 	private $nLines;
 	private $nColumns;
-	private $structure;
+	protected $structure;
 	
 
     public function getNLines() : int
@@ -35,10 +35,34 @@ abstract class Table
         return $this->structure;
     }
 
-    public function setStructure($nLines, $nColumn)
+    public function setStructure($structure)
     {
         $this->structure = $structure;
         return $this;
     }
+    
+    public abstract function addColumns();
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
 
 }

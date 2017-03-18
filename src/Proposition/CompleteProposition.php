@@ -9,12 +9,14 @@ class CompleteProposition
 	private $motherProposition;
 	private $allPropositions;
 	private $allSimplePropositions;
+	private $allCompoundPropositions;
 	
 	public function __construct(Proposition $motherProposition)
 	{
 		$this->completeProposition = $motherProposition;
 		$this->populateAllPropositions($motherProposition);
 		$this->populateAllSimplePropositions();
+		$this->populateAllCompoundPropositions();
 	}
 	
 	public function seperePropositions() : void
@@ -39,6 +41,28 @@ class CompleteProposition
 		return $size;
 	}
 	
+	public function getSimplePropositionsNotDenied()
+	{
+		$propositions = null;
+		foreach ($this->allSimplePropositions as $prop) {
+			if ($prop->getIsDenied() === false) {
+				$propositions[] = $prop;
+			}
+		}
+		return $propositions;
+	}
+	
+	public function countSimplePropositionsNotDenied(): int
+	{
+		$count = 0;
+		foreach ($this->allSimplePropositions as $prop) {
+			if ($prop->getIsDenied() === false) {
+				$count++;
+			}
+		}
+		return $count;
+	}
+	
 	public function countAllPropositions() : int
 	{
 		$size = 1;
@@ -53,12 +77,52 @@ class CompleteProposition
 	
 	private function populateAllSimplePropositions()
 	{
+		
 		if ($this->allPropositions != null) {
+			$denieds = null;
 			foreach ($this->allPropositions as $prop) {
 				if ($prop->getType()->equals(TypePropositionEnum::SIMPLE())) {
-					$this->allSimplePropositions[] = $prop;
+					$isDenied = $prop->verifyIsDenied($prop->getPropositionValue(), TypePropositionEnum::SIMPLE());
+					
+					if ($isDenied == true) {
+						$denieds[] = $prop;
+					} else {
+						$this->allSimplePropositions[] = $prop;
+					}
+					
 				}
 			}
+			if ($denieds != null) {
+				foreach ($denieds as $denied) {
+					$this->allSimplePropositions[] = $denied;
+				}
+			}
+			
+			
+		}
+	}
+	
+	private function populateAllCompoundPropositions()
+	{
+		if ($this->allPropositions != null) {
+			$denieds = null;
+			foreach ($this->allPropositions as $prop) {
+				if ($prop->getType()->equals(TypePropositionEnum::COMPOUND())) {
+					if ($prop->getIsDenied() === true) {
+						$denieds[] = $prop;
+					} else {
+						$this->allCompoundPropositions[] = $prop;
+					}
+					
+				}
+			}
+
+			if ($denieds != null) {
+				foreach ($denieds as $denied) {
+					$this->allCompoundPropositions[] = $prop;
+				}
+			}
+			
 		}
 	}
 	
@@ -66,10 +130,10 @@ class CompleteProposition
 	{
 		
 	}
-	
+
 	private function populateAllPropositions(Proposition $completeProposition)
 	{
-		$propositions = $completeProposition->getPropositions();
+		 $propositions = $completeProposition->getPropositions();
 		
 		if ($propositions != null) {
 			foreach ($propositions as $prop) {
@@ -78,7 +142,8 @@ class CompleteProposition
 					$this->populateAllPropositions($prop);
 				}
 			}
-		}
+		} 
+
 	}
 	
 	public function verifyExistProposition(String $proposition) : bool
@@ -118,7 +183,17 @@ class CompleteProposition
         $this->allPropositions = $allPropositions;
         return $this;
     }
-
+    
+    public function getAllCompoundPropositions()
+    {
+    	return $this->allCompoundPropositions;
+    }
+    
+    public function setAllCompoundPropositions($allCompoundPropositions)
+    {
+    	$this->allCompoundPropositions = $allCompoundPropositions;
+    	return $this;
+    }
 
     public function getAllSimplePropositions()
     {

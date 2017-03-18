@@ -9,14 +9,15 @@ require_once '../vendor/autoload.php';
 // pos = 7
 // size = 3
 
- $proposition = new Proposition("~(~a^b>p)>c=~p", TypePropositionEnum::COMPOUND());
+$proposition = new Proposition("~(~a^b>p)>c=~p", TypePropositionEnum::COMPOUND());
 
-$motherPro = new CompleteProposition($proposition); 
+$motherPro = new CompleteProposition($proposition);
+
 
 /* $table = new TruthTable(2);
 echo $table->getNLines(); */
 
-$table = new TruthTable($motherPro);
+/* $table = new TruthTable($motherPro);
 echo $table->getNColumns();
 
 
@@ -25,7 +26,7 @@ echo $table->getNColumns();
 
 foreach ($allPropositions as $a) {
 	echo $a->getPropositionValue(). "<br>";
-}  
+}   */
 
 /* $motherDenied = $proposition->getIsDenied() === true ? "true" : "false";
 echo "MAE: ".$proposition->getPropositionValue(). " | TYPE: ".$proposition->getType(). " | isDenied = ".$motherDenied. "<br>";
