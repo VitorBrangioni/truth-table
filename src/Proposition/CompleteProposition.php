@@ -14,7 +14,7 @@ class CompleteProposition
 	
 	public function __construct(Proposition $motherProposition)
 	{
-		$this->completeProposition = $motherProposition;
+		$this->motherProposition = $motherProposition;
 		$this->populateAllPropositions($motherProposition);
 		$this->populateAllSimplePropositions();
 		$this->populateAllCompoundPropositions();

@@ -39,7 +39,7 @@ class TruthTable extends Table
 		for ($i = $numCoumpoundProp -1; $i >=0; $i--) {
 			$this->structure[0][] = $compoundPropositions[$i];
 		}
-		
+		$this->structure[0][] = $this->motherProposition->getMotherProposition();
 	}
 	/**
 	 *  @DONE
@@ -89,22 +89,16 @@ class TruthTable extends Table
 		for ($column = 0; $column < count($this->structure[0]); $column++) {
 			$prop = $this->structure[0][$column];
 			
-			echo "[1]percorrendo ($column) = ". $prop->getPropositionValue(). '<br><br>';
-			
 			if ($prop->getIsDenied()) {
 				$valueNotDenied = $prop->removeSignalOfDenied($prop->getPropositionValue());
 				// percorrendo novamente colunas para achar o valor q preciso comparar
 				for ($c = 0; $c < count($this->structure[0]); $c++) {
-					echo "[2]percorrendo ($c) = ". $this->structure[0][$c]->getPropositionValue(). '<br><br>';
 					$p = $this->structure[0][$c];
 					
 					if ($p->getPropositionValue() == $valueNotDenied) {
 						for ($i = 1; $i <= $this->getNLines(); $i++) {
-							echo "[3]percorrendo linhas(linha - $i) = ". $this->structure[0][$c]->getPropositionValue(). '<br><br>';
 							//percorrendo os valores bool do coluna q preciso verificar
 							$valorBoolRef = $this->structure[$i][$c];
-							echo "COLUMN = $c <br>";
-							echo "valor da coluna q esta adicionado o bool = ". $this->structure[0][$column]->getPropositionValue() . "<br>";
 							// valor bool da q preciso definir (negativa)
 							$this->structure[$i][$column] = ($valorBoolRef == "true") ? "false": "true";
 							//$this->structure[$i][$column] = "test";
@@ -118,34 +112,21 @@ class TruthTable extends Table
 	
 	public function generateBoolValueOtherPropositions()
 	{
-		echo '<hr>';
-		echo '**** INICIO generateBoolValueOtherPropositions***** <br><br>';
-		
 		for ($column = 0; $column < count($this->structure[0]); $column++) {
 			$prop = $this->structure[0][$column];
 			
-			echo "[1]percorrendo($column) - ". $prop->getPropositionValue(). '<br>';
-			
-			// @TODO
 			if(!$prop->getIsDenied() && $prop->getType()->equals(TypePropositionEnum::COMPOUND())) {
 				$conn = $prop->getConnective();
 				
 				$boolValuePropRefs = null;
 				
 					foreach ($prop->getPropositions() as $propChild) {
-						echo "	-> [2]percorrendo - Prop- CHild = ". $propChild->getPropositionValue(). '<br>';
-						
 						for ($c = 0; $c < count($this->structure[0]); $c++) {
-							echo "		-> ->[3]percorrendo($c) <br>";
 							$p = $this->structure[0][$c];
-							echo "		-> -> Pro-percorrido = ".$p->getPropositionValue(). '<br>';
-							echo "		-> -> Pro-Child = ".$propChild->getPropositionValue(). '<br>';
 							if ($p->getPropositionValue() == $propChild->getPropositionValue()) {
-								echo "		-> ->".$p->getPropositionValue() . " == ". $propChild->getPropositionValue().'<br>';
 								$boolValuePropRef = null;
 								for ($row = 1; $row <= $this->getNLines(); $row++) {
 									$boolValuePropRef[] = $this->structure[$row][$c];
-									echo "		-> -> -> [4]percorrendo - bool value = ". $this->structure[$row][$c]. '<br>';
 								}
 								$boolValuePropRefs[] = $boolValuePropRef;
 							}
@@ -168,16 +149,11 @@ class TruthTable extends Table
 	
 	private function defineBooleanValue(array $boolValuePropRefs, ConnectiveEnum $connective, int $column)
 	{
-		echo '** INICIO defineBooleanValue ** <br>';
-		$arrayBooleanResults = null;
 		if(count($boolValuePropRefs) > 1 && count($boolValuePropRefs[0]) == count($boolValuePropRefs[1])) {
 			for ($i = 0; $i < count($boolValuePropRefs[0]); $i++) {
 				$value1 = $boolValuePropRefs[0][$i];
 				$value2 = $boolValuePropRefs[1][$i];
 
-				
-				echo "$value1  ===  $value2 <br>";
-				
 				if ($connective->equals(ConnectiveEnum::AND())) {
 					if ($value1 == "true" && $value2 == "true") {
 						$arrayBooleanResults[] = "true";

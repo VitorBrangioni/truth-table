@@ -34,8 +34,6 @@ class Proposition
 			}
 			
 			foreach ($propositions as $prop) {
-			 	echo "prop: ".$prop. " | ";
-			 	echo $this->verifyTypeProposition($prop) . "<br>";
 				$this->propositions[] = new Proposition($prop, $this->verifyTypeProposition($prop));
 			} 
 		

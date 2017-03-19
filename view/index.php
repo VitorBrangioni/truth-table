@@ -1,7 +1,18 @@
 <?php 
 
+use Proposition\Proposition;
+use Enum\TypePropositionEnum;
+use Proposition\CompleteProposition;
+use Table\TruthTable;
+
+require_once '../vendor/autoload.php';
+
 if (isset($_POST['submit'])) {
-	echo $_POST['fullExpression'];
+	$motherProposition = $_POST['fullExpression'];
+	$proposition = new Proposition($motherProposition, TypePropositionEnum::COMPOUND());
+	$motherPro = new CompleteProposition($proposition);
+	$truthTable = new TruthTable($motherPro);
+	$columns = $truthTable->getStructure();
 }
 
 ?>
@@ -73,7 +84,7 @@ if (isset($_POST['submit'])) {
 				var isLetter = $scope.lastCharIsLetter($scope.fullExpression);
 				var lastChar = $scope.getLastChar($scope.fullExpression);
 					
-				if(isLetter === true) {
+				if(isLetter === true || lastChar == ")") {
 					$scope.fullExpression += simbol;
 				}
 			}
@@ -82,7 +93,7 @@ if (isset($_POST['submit'])) {
 				var isLetter = $scope.lastCharIsLetter($scope.fullExpression);
 				var lastChar = $scope.getLastChar($scope.fullExpression);
 					
-				if(isLetter === false) {
+				if(isLetter === false && lastChar != ")") {
 					$scope.fullExpression += letter;
 				}
 
@@ -141,6 +152,8 @@ if (isset($_POST['submit'])) {
 <body ng-controller="truthTableController" class="container container-full">
 <form method="POST" action="index.php">
 	<div class="row container container-full">
+	<h1> Truth Table - PUC </h1>
+	<h3>Vitor H. Brangioni</h3>
 
 		<div class="btn-group-vertical">
 			<input ng-model="expression.SimpleProposition" class="form-control" type="text" name="SimpleProposition" placeholder="proposition" maxlength="1">
@@ -156,15 +169,15 @@ if (isset($_POST['submit'])) {
 
 
 		</div>
-		<div class="container pull-right">form-control
+		<div class="container pull-right">
 			<div class="row">
 
 				<div class="btn-group-justified">
-					<a ng-click="insertLogicOperations('∧')" href="#" class="btn btn-primary">e (∧)</a>
+					<a ng-click="insertLogicOperations('^')" href="#" class="btn btn-primary">e (∧)</a>
 					<a ng-click="insertLogicOperations('v')" href="#"	class="btn btn-primary">ou (v)</a>
 					<a href="#" ng-click="insertLogicOperations('⊻')" class="btn btn-primary">ou..ou (⊻)</a>
-					<a href="#" ng-click="insertLogicOperations('→')" class="btn btn-primary">implicação (→)</a>		
-					<a href="#"	ng-click="insertLogicOperations('↔')" class="btn btn-primary">equivalência (↔)</a>
+					<a href="#" ng-click="insertLogicOperations('>')" class="btn btn-primary">implicação (→)</a>		
+					<a href="#"	ng-click="insertLogicOperations('=')" class="btn btn-primary">equivalência (↔)</a>
 					<a href="#" ng-click="insertLogicOperations('~')" class="btn btn-primary">negação (~)</a>
 					<a href="#" ng-click="insertParenthese(parentheseEnum.OPENED)" class="btn btn-primary">(</a>
 					<a href="#" ng-click="insertParenthese(parentheseEnum.CLOSED)" class="btn btn-primary">)</a>
@@ -181,7 +194,6 @@ if (isset($_POST['submit'])) {
 						</div> 
 					</div>
 				</div>
-				{{expression}}
 			</div>
 			<button ng-click="deleteLastCharConsole()" type="button" class="btn btn-danger">
 				Delete
@@ -193,7 +205,14 @@ if (isset($_POST['submit'])) {
 				class="btn btn-primary">
 		</div>
 	</div>
+	<?php
+		if (isset($_POST['submit'])) {
+			include_once '../public/tableResult.php';
+		}
+	?>
 </form>
+
+
 </body>
 
 </html>
