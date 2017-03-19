@@ -3,6 +3,7 @@
 namespace Proposition;
 
 use Enum\TypePropositionEnum;
+use Proposition\Proposition;
 
 class CompleteProposition
 {
@@ -24,9 +25,17 @@ class CompleteProposition
 		
 	}
 	
-	public function findProposition(String $proposition) : Proposition
+	public function findProposition(String $proposition)
 	{
+		$find = null;
 		
+		foreach ($this->allPropositions as $prop) {
+			if ($prop->getPropositionValue() == $proposition) {
+				$find = $prop;
+				break;
+			}
+		}
+		return $find;
 	}
 	
 	public function countSimplePropositions() : int
@@ -75,21 +84,46 @@ class CompleteProposition
 		return $size;
 	}
 	
+	public function existSimpleProposition(Proposition $proposition) : bool
+	{
+		$exist = false;
+		
+		for ($i = 0; $i < count($this->allSimplePropositions); $i++) {
+			$prop = $this->allSimplePropositions[$i];
+			
+			if ($prop->getPropositionValue() === $proposition->getPropositionValue()) {
+				$exist = true;
+			}
+		}
+		return $exist;
+	}
+	
 	private function populateAllSimplePropositions()
 	{
 		
 		if ($this->allPropositions != null) {
 			$denieds = null;
+			$thisPropNotDenied = null;
 			foreach ($this->allPropositions as $prop) {
 				if ($prop->getType()->equals(TypePropositionEnum::SIMPLE())) {
 					$isDenied = $prop->verifyIsDenied($prop->getPropositionValue(), TypePropositionEnum::SIMPLE());
 					
 					if ($isDenied == true) {
+ 
+						/*$denieds[] = new Proposition($prop->getPropositionValue(), TypePropositionEnum::SIMPLE());
+						$prop->removeMySignalOfDenied();
+						$prop->setIsDenied(false);*/
+						
 						$denieds[] = $prop;
-					} else {
+						$thisPropNotDenied = new Proposition($prop->removeSignalOfDenied($prop->getPropositionValue()), TypePropositionEnum::SIMPLE());
+						
+					}
+					if (!$prop->getIsDenied() && !$this->existSimpleProposition($prop)) {
 						$this->allSimplePropositions[] = $prop;
 					}
-					
+					if ($thisPropNotDenied != null && !$this->existSimpleProposition($thisPropNotDenied)) {
+						$this->allSimplePropositions[] = $thisPropNotDenied;
+					}
 				}
 			}
 			if ($denieds != null) {

@@ -110,13 +110,21 @@ class Proposition
 		return $isConnective;
 	}
 	
-	private function removeSignalOfDenied(String $proposition)
+	public function removeSignalOfDenied(String $proposition)
 	{
 		$newProposition = $proposition;
 		if ($proposition != "" && $proposition{0} == "~") {
 			$newProposition = substr($proposition, 1, strlen($proposition) - 1);
 		}
 		return $newProposition;
+	}
+	
+	public function removeMySignalOfDenied()
+	{
+		$propositionValue = $this->getPropositionValue();
+		if (strlen($propositionValue) > 1 && $propositionValue{0} == "~") {
+			$this->setPropositionValue(substr($propositionValue, 1, strlen($propositionValue) - 1));
+		}
 	}
 	
 	private function removeParentheses(String $proposition) : String
