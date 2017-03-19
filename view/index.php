@@ -83,10 +83,13 @@ if (isset($_POST['submit'])) {
 			$scope.insertLogicOperations = function (simbol) {
 				var isLetter = $scope.lastCharIsLetter($scope.fullExpression);
 				var lastChar = $scope.getLastChar($scope.fullExpression);
-					
-				if(isLetter === true || lastChar == ")") {
+				
+				if (simbol == "~" && isLetter === false){
+					$scope.fullExpression += simbol;
+				} else if (isLetter === true || lastChar == ")") {
 					$scope.fullExpression += simbol;
 				}
+
 			}
 
 			$scope.insertProposition = function (letter) {
