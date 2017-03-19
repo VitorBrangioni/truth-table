@@ -3,7 +3,6 @@
 use Proposition\Proposition;
 use Enum\TypePropositionEnum;
 use Proposition\CompleteProposition;
-use Table\TruthTable;
 
 require_once '../vendor/autoload.php';
 // pos = 7

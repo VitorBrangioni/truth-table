@@ -154,46 +154,45 @@ if (isset($_POST['submit'])) {
 
 <body ng-controller="truthTableController" class="container container-full">
 <form method="POST" action="index.php">
-	<div class="row container container-full">
-	<h1> Truth Table - PUC </h1>
-	<h3>Vitor H. Brangioni</h3>
 
-		<div class="btn-group-vertical">
-			<input ng-model="expression.SimpleProposition" class="form-control" type="text" name="SimpleProposition" placeholder="proposition" maxlength="1">
-			<input ng-model="expression.phrase" class="form-control" type="text" name="phrase" placeholder="phrase">
-			<button ng-click="insertPhrase(expression)" ng-disabled="!expression.phrase || !expression.SimpleProposition" type="button" class="btn btn-primary"> insert expression </button>
-			
-
-			<div ng-repeat="expression in expressions" >
-				<button ng-click="insertProposition(expression.SimpleProposition)" type="button" class="btn btn-link">
-					<strong> {{expression.SimpleProposition}}:</strong> {{expression.phrase}}
-				</button>
-			</div>
-
-
+	<div class="row">
+		<div class="col-md-12">
+			<h1> Truth Table - PUC </h1>
+			<h3>Vitor H. Brangioni</h3>
 		</div>
-		<div class="container pull-right">
-			<div class="row">
+	</div>
 
-				<div class="btn-group-justified">
-					<a ng-click="insertLogicOperations('^')" href="#" class="btn btn-primary">e (∧)</a>
-					<a ng-click="insertLogicOperations('v')" href="#"	class="btn btn-primary">ou (v)</a>
-					<a href="#" ng-click="insertLogicOperations('⊻')" class="btn btn-primary">ou..ou (⊻)</a>
-					<a href="#" ng-click="insertLogicOperations('>')" class="btn btn-primary">implicação (→)</a>		
-					<a href="#"	ng-click="insertLogicOperations('=')" class="btn btn-primary">equivalência (↔)</a>
-					<a href="#" ng-click="insertLogicOperations('~')" class="btn btn-primary">negação (~)</a>
-					<a href="#" ng-click="insertParenthese(parentheseEnum.OPENED)" class="btn btn-primary">(</a>
-					<a href="#" ng-click="insertParenthese(parentheseEnum.CLOSED)" class="btn btn-primary">)</a>
+	<div class="row">
+		<div class="col-md-4">
+			<div class="btn-group-vertical">
+				<input ng-model="expression.SimpleProposition" class="form-control" type="text" name="SimpleProposition" placeholder="proposition" maxlength="1">
+				<input ng-model="expression.phrase" class="form-control" type="text" name="phrase" placeholder="phrase">
+				<button ng-click="insertPhrase(expression)" ng-disabled="!expression.phrase || !expression.SimpleProposition" type="button" class="btn btn-primary"> insert expression </button>
+				
+
+				<div ng-repeat="expression in expressions" >
+					<button ng-click="insertProposition(expression.SimpleProposition)" type="button" class="btn btn-link">
+						<strong> {{expression.SimpleProposition}}:</strong> {{expression.phrase}}
+					</button>
 				</div>
 			</div>
-			<div class="panel panel-primary row">
+		</div>
+		<div class="col-md-8 col-md-pull-1">
+			<div class="btn-group-justified">
+				<a ng-click="insertLogicOperations('^')" href="#" class="btn btn-primary">e (∧)</a>
+				<a ng-click="insertLogicOperations('v')" href="#"	class="btn btn-primary">ou (v)</a>
+				<a href="#" ng-click="insertLogicOperations('⊻')" class="btn btn-primary">ou..ou (⊻)</a>
+				<a href="#" ng-click="insertLogicOperations('>')" class="btn btn-primary">implicação (→)</a>		
+				<a href="#"	ng-click="insertLogicOperations('=')" class="btn btn-primary">equivalência (↔)</a>
+				<a href="#" ng-click="insertLogicOperations('~')" class="btn btn-primary">negação (~)</a>
+				<a href="#" ng-click="insertParenthese(parentheseEnum.OPENED)" class="btn btn-primary">(</a>
+				<a href="#" ng-click="insertParenthese(parentheseEnum.CLOSED)" class="btn btn-primary">)</a>
+			</div>
+			<div class="panel panel-primary">
 				<div class="panel-body form-group">
-
 					<div class="row">
-
 						<div class="col-md-12">
 							<input class="form-control" type="text" name="fullExpression" value="{{fullExpression}}" readonly>
-							
 						</div> 
 					</div>
 				</div>
