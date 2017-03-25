@@ -8,11 +8,12 @@ use Table\TruthTable;
 require_once '../vendor/autoload.php';
 
 if (isset($_POST['submit'])) {
-	$motherProposition = $_POST['fullExpression'];
-	$proposition = new Proposition($motherProposition, TypePropositionEnum::COMPOUND());
+	$motherProposition = $_POST['fullExpressionConverted'];
+	
+	 $proposition = new Proposition($motherProposition, TypePropositionEnum::COMPOUND());
 	$motherPro = new CompleteProposition($proposition);
 	$truthTable = new TruthTable($motherPro);
-	$columns = $truthTable->getStructure();
+	$columns = $truthTable->getStructure(); 
 }
 
 ?>
@@ -31,6 +32,7 @@ if (isset($_POST['submit'])) {
 		angular.module("tabelaVerdade", []);
 		angular.module("tabelaVerdade").controller('truthTableController', function ($scope){
 			$scope.fullExpression = "";
+			$scope.fullExpressionConverted = "";
 
 			$scope.expressions = [
 				{SimpleProposition: "i", phrase: "há um leão no supermercado"},
@@ -65,8 +67,10 @@ if (isset($_POST['submit'])) {
 				var verifiedParentheses = $scope.verifyParentheses();
 				if (parenthese === $scope.parentheseEnum.CLOSED && verifiedParentheses > 0 && $scope.lastCharIsLetter($scope.fullExpression)) {
 					$scope.fullExpression += ")";
+					$scope.fullExpressionConverted += ")";
 				} else if (verifiedParentheses === 0 && parenthese === $scope.parentheseEnum.OPENED) {
 					$scope.fullExpression += "(";
+					$scope.fullExpressionConverted += "(";
 				}
 			}
 
@@ -86,9 +90,31 @@ if (isset($_POST['submit'])) {
 				
 				if (simbol == "~" && isLetter === false){
 					$scope.fullExpression += simbol;
+					$scope.fullExpressionConverted += simbol;
 				} else if (isLetter === true || lastChar == ")") {
-					$scope.fullExpression += simbol;
+					var simbolConverted;
+					switch(simbol) {
+						case "→":
+							
+							simbolConverted = ">";
+							break;
+						case "↔":
+							simbolConverted = "=";
+							break;
+						case "∧":
+							simbolConverted = "^";
+							break;
+						case "v":
+							simbolConverted = "v";
+							break;
+						case "⊻":
+							simbolConverted = "|";
+					}
+					
+				$scope.fullExpression += simbol;
+				$scope.fullExpressionConverted += simbolConverted;
 				}
+
 
 			}
 
@@ -98,6 +124,7 @@ if (isset($_POST['submit'])) {
 					
 				if(isLetter === false && lastChar != ")") {
 					$scope.fullExpression += letter;
+					$scope.fullExpressionConverted += letter;
 				}
 
 			}
@@ -127,10 +154,12 @@ if (isset($_POST['submit'])) {
 
 			$scope.deleteLastCharConsole = function () {
 				$scope.fullExpression = $scope.deleteLastChar($scope.fullExpression);
+				$scope.fullExpressionConverted = $scope.deleteLastChar($scope.fullExpressionConverted);
 			}
 
 			$scope.deleteAllCharConsole = function () {
 				$scope.fullExpression = "";
+				$scope.fullExpressionConverted = "";
 			}
 
 		});
@@ -179,11 +208,11 @@ if (isset($_POST['submit'])) {
 		</div>
 		<div class="col-md-8 col-md-pull-1">
 			<div class="btn-group-justified">
-				<a ng-click="insertLogicOperations('^')" href="#" class="btn btn-primary">e (∧)</a>
+				<a ng-click="insertLogicOperations('∧')" href="#" class="btn btn-primary">e (∧)</a>
 				<a ng-click="insertLogicOperations('v')" href="#"	class="btn btn-primary">ou (v)</a>
 				<a href="#" ng-click="insertLogicOperations('⊻')" class="btn btn-primary">ou..ou (⊻)</a>
-				<a href="#" ng-click="insertLogicOperations('>')" class="btn btn-primary">implicação (→)</a>		
-				<a href="#"	ng-click="insertLogicOperations('=')" class="btn btn-primary">equivalência (↔)</a>
+				<a href="#" ng-click="insertLogicOperations('→')" class="btn btn-primary">implicação (→)</a>		
+				<a href="#"	ng-click="insertLogicOperations('↔')" class="btn btn-primary">equivalência (↔)</a>
 				<a href="#" ng-click="insertLogicOperations('~')" class="btn btn-primary">negação (~)</a>
 				<a href="#" ng-click="insertParenthese(parentheseEnum.OPENED)" class="btn btn-primary">(</a>
 				<a href="#" ng-click="insertParenthese(parentheseEnum.CLOSED)" class="btn btn-primary">)</a>
@@ -193,6 +222,8 @@ if (isset($_POST['submit'])) {
 					<div class="row">
 						<div class="col-md-12">
 							<input class="form-control" type="text" name="fullExpression" value="{{fullExpression}}" readonly>
+							<input type="hidden" name="fullExpressionConverted" value="{{fullExpressionConverted}}">
+							{{fullExpressionConverted}}
 						</div> 
 					</div>
 				</div>
@@ -210,7 +241,7 @@ if (isset($_POST['submit'])) {
 	<?php
 		if (isset($_POST['submit'])) {
 			include_once '../public/tableResult.php';
-		}
+		} 
 	?>
 </form>
 

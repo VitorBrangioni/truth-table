@@ -20,9 +20,13 @@ class CompleteProposition
 		$this->populateAllCompoundPropositions();
 	}
 	
-	public function seperePropositions() : void
+	private function replacePropositions(String $motherProposition) : String
 	{
-		
+		for ($i = 0; $i < strlen($motherProposition); $i++) {
+			$char = $motherProposition{$i};
+			
+			
+		}
 	}
 	
 	public function findProposition(String $proposition)
@@ -109,11 +113,6 @@ class CompleteProposition
 					$isDenied = $prop->verifyIsDenied($prop->getPropositionValue(), TypePropositionEnum::SIMPLE());
 					
 					if ($isDenied == true) {
- 
-						/*$denieds[] = new Proposition($prop->getPropositionValue(), TypePropositionEnum::SIMPLE());
-						$prop->removeMySignalOfDenied();
-						$prop->setIsDenied(false);*/
-						
 						$denieds[] = $prop;
 						$thisPropNotDenied = new Proposition($prop->removeSignalOfDenied($prop->getPropositionValue()), TypePropositionEnum::SIMPLE());
 						
@@ -131,7 +130,6 @@ class CompleteProposition
 					$this->allSimplePropositions[] = $denied;
 				}
 			}
-			
 			
 		}
 	}
@@ -160,11 +158,6 @@ class CompleteProposition
 		}
 	}
 	
-	public function findAllCompoundPropositions() : array
-	{
-		
-	}
-
 	private function populateAllPropositions(Proposition $completeProposition)
 	{
 		 $propositions = $completeProposition->getPropositions();
@@ -195,11 +188,6 @@ class CompleteProposition
 		return $exist;
 	}
 	
-	public function toString() : String
-	{
-		
-	}
-
     public function getMotherProposition(){
         return $this->motherProposition;
     }

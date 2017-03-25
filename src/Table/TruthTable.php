@@ -12,6 +12,9 @@ class TruthTable extends Table
 	private $motherProposition;
 	private $propositions;
 	
+	const TRUE = "verdadeiro";
+	const FALSE = "falso";
+	
 	public function __construct(CompleteProposition $motherProposition)
 	{
 		$this->setNColumns($motherProposition->countAllPropositions());
@@ -101,7 +104,6 @@ class TruthTable extends Table
 							$valorBoolRef = $this->structure[$i][$c];
 							// valor bool da q preciso definir (negativa)
 							$this->structure[$i][$column] = ($valorBoolRef == "true") ? "false": "true";
-							//$this->structure[$i][$column] = "test";
 						}
 					}
 				}
@@ -142,6 +144,8 @@ class TruthTable extends Table
 					$this->defineBooleanValue($boolValuePropRefs, ConnectiveEnum::IMPLY(), $column);
 				} else if ($conn->equals(ConnectiveEnum::EQUIVALENT())) {
 					$this->defineBooleanValue($boolValuePropRefs, ConnectiveEnum::EQUIVALENT(), $column);
+				} else if ($conn->equals(ConnectiveEnum::OR_OR())) {
+					$this->defineBooleanValue($boolValuePropRefs, ConnectiveEnum::OR_OR(), $column);
 				}
 			}
 		}
@@ -178,18 +182,22 @@ class TruthTable extends Table
 					} else {
 						$arrayBooleanResults[] = "false";
 					}
+				} else if ($connective->equals(ConnectiveEnum::OR_OR())) {
+					if ($value1 == "true" && $value2 == "true" || $value1 == "false" && $value2 == "false") {
+						$arrayBooleanResults[] = "false";
+					} else {
+						$arrayBooleanResults[] = "true";
+					}
 				}
 			}
 		}
 		
 		if ($arrayBooleanResults != null) {
-			
 			$i = 0;
 			for ($row = 1; $row <= $this->getNLines(); $row++) {
 				$this->structure[$row][$column] = $arrayBooleanResults[$i];
 				$i++;
 			}
-			//$arrayBooleanResults[$i++];
 		}
 	}
 	

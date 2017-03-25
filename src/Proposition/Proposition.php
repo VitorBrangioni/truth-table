@@ -17,6 +17,7 @@ class Proposition
 	const OR = "v";
 	const EQUIVALENT = "=";
 	const IMPLY = ">";
+	const OR_OR = "|";
 	const DENIED = "~";
 	
 	public function __construct(String $propositionValue, TypePropositionEnum $type)
@@ -48,8 +49,6 @@ class Proposition
 			$firtChar = $proposition{0};
 			$secondChar = strlen($proposition) > 1 ? $proposition{1} : null;
 			
-
-			
 			if ($type->equals(TypePropositionEnum::SIMPLE())) {
 				if ($firtChar === Proposition::DENIED) {
 					$isDenied = true;
@@ -80,6 +79,9 @@ class Proposition
 			case Proposition::EQUIVALENT:
 				$connective = ConnectiveEnum::EQUIVALENT();
 				break;
+			case Proposition::OR_OR:
+				$connective = ConnectiveEnum::OR_OR();
+				break;
 		}
 		return $connective;
 	}
@@ -92,12 +94,9 @@ class Proposition
 		return TypePropositionEnum::COMPOUND();
  	}
 	
-	
-
-	
 	private function isConnective($char) : bool
 	{
-		$connectives = array(Proposition::AND, Proposition::OR, Proposition::IMPLY, Proposition::EQUIVALENT);
+		$connectives = array(Proposition::AND, Proposition::OR, Proposition::IMPLY, Proposition::EQUIVALENT, Proposition::OR_OR);
 		$isConnective = false;
 		
 		foreach ($connectives as $connective) {
